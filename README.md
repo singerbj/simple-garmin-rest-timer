@@ -1,7 +1,28 @@
-# simple-garmin-rest-timer
+<p align="center">
+  <img src="assets/launcher_icon_500x500.png" alt="Rest Timer icon" width="120">
+</p>
 
-A tiny Connect IQ rest timer for Garmin watches (vívoactive, Venu, Forerunner, fēnix, epix,
-Instinct, MARQ, Descent, D2, Approach, Enduro — every watch on Connect IQ 3.0+).
+<h1 align="center">simple-garmin-rest-timer</h1>
+
+<p align="center">
+  A tiny Connect IQ rest timer for Garmin watches (vívoactive, Venu, Forerunner, fēnix, epix,
+  Instinct, MARQ, Descent, D2, Approach, Enduro — every watch on Connect IQ 3.0+).
+</p>
+
+<table align="center">
+  <tr>
+    <td align="center"><img src="assets/1.png" alt="Stopped" width="180"></td>
+    <td align="center"><img src="assets/2.png" alt="Editing" width="180"></td>
+    <td align="center"><img src="assets/3.png" alt="Counting down" width="180"></td>
+    <td align="center"><img src="assets/4.png" alt="Time's up" width="180"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Ready</sub></td>
+    <td align="center"><sub>Editing the time</sub></td>
+    <td align="center"><sub>Counting down</sub></td>
+    <td align="center"><sub>Time's up</sub></td>
+  </tr>
+</table>
 
 ## Usage
 
