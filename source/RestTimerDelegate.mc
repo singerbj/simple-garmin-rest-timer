@@ -10,10 +10,20 @@ class RestTimerDelegate extends WatchUi.BehaviorDelegate {
         _view = view;
     }
 
-    // Top-right (START/ENTER) button.
+    // Top-right (START/ENTER) button, and UP/DOWN on watches that have them.
+    // UP/DOWN are handled here so the page behaviors below only come from swipes.
     function onKey(evt as WatchUi.KeyEvent) as Boolean {
-        if (evt.getKey() == WatchUi.KEY_ENTER) {
+        var key = evt.getKey();
+        if (key == WatchUi.KEY_ENTER) {
             _view.pressButton();
+            return true;
+        }
+        if (key == WatchUi.KEY_UP) {
+            _view.adjust(1);
+            return true;
+        }
+        if (key == WatchUi.KEY_DOWN) {
+            _view.adjust(-1);
             return true;
         }
         return false;
@@ -41,32 +51,20 @@ class RestTimerDelegate extends WatchUi.BehaviorDelegate {
         return false;
     }
 
-    // Button-only watches: hold UP (MENU) to edit, UP/DOWN to adjust.
+    // Button-only watches: hold UP (MENU) to edit.
     function onMenu() as Boolean {
         _view.beginEdit();
         return true;
     }
 
-    function onPreviousPage() as Boolean {
+    // The system turns a swipe up into "next page", so swipe up increases the time.
+    function onNextPage() as Boolean {
         _view.adjust(1);
         return true;
     }
 
-    function onNextPage() as Boolean {
+    function onPreviousPage() as Boolean {
         _view.adjust(-1);
         return true;
-    }
-
-    function onSwipe(evt as WatchUi.SwipeEvent) as Boolean {
-        var dir = evt.getDirection();
-        if (dir == WatchUi.SWIPE_UP) {
-            _view.adjust(1);
-            return true;
-        }
-        if (dir == WatchUi.SWIPE_DOWN) {
-            _view.adjust(-1);
-            return true;
-        }
-        return false;
     }
 }
