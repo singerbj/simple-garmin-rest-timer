@@ -7,8 +7,12 @@ A tiny Connect IQ rest timer for the Garmin vívoactive 4 / 4S.
 - The screen shows the rest time (default **30**).
 - **Top-right button**: start the countdown. Press again while it's running to reset.
 - At **0** the watch vibrates, then resets to the set time.
-- **Swipe up / down** (while stopped): change the time by ±1 s, from 1 to 180.
-- The chosen time is saved and restored the next time the app opens.
+- **Tap and hold** the screen (while stopped) to edit the time; the number turns yellow.
+  - **Swipe up / down** to change it in 5 s steps (1–180).
+  - **Tap** the screen or press the **top-right button** to save.
+  - **Back** discards the change.
+- A small hint at the bottom shows "Tap and hold to edit" or "Tap to save".
+- The saved time is restored the next time the app opens.
 
 ## Build & install
 

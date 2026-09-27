@@ -7,14 +7,17 @@ import Toybox.WatchUi;
 
 const MIN_SECONDS = 1;
 const MAX_SECONDS = 180;
+const STEP_SECONDS = 5;
 const DEFAULT_SECONDS = 30;
 const STORAGE_KEY = "duration";
 
 class RestTimerView extends WatchUi.View {
 
     private var _duration as Number = DEFAULT_SECONDS;
+    // Seconds left while running; the draft value while editing.
     private var _remaining as Number = DEFAULT_SECONDS;
     private var _running as Boolean = false;
+    private var _editing as Boolean = false;
     private var _timer as Timer.Timer;
 
     function initialize() {
@@ -28,20 +31,39 @@ class RestTimerView extends WatchUi.View {
     }
 
     function onUpdate(dc as Graphics.Dc) as Void {
+        var w = dc.getWidth();
+        var h = dc.getHeight();
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
-        dc.setColor(_running ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(
-            dc.getWidth() / 2,
-            dc.getHeight() / 2,
-            Graphics.FONT_NUMBER_THAI_HOT,
-            _remaining.toString(),
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-        );
+
+        var color = Graphics.COLOR_WHITE;
+        if (_running) {
+            color = Graphics.COLOR_GREEN;
+        } else if (_editing) {
+            color = Graphics.COLOR_YELLOW;
+        }
+        dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h / 2, Graphics.FONT_NUMBER_THAI_HOT, _remaining.toString(),
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
+        if (!_running) {
+            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 0.84, Graphics.FONT_XTINY,
+                _editing ? "Tap to save" : "Tap and hold to edit",
+                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        }
     }
 
-    // Top-right button: start if idle, reset if running.
-    function toggle() as Void {
+    function isEditing() as Boolean {
+        return _editing;
+    }
+
+    // Top-right button: save while editing, otherwise start / reset.
+    function pressButton() as Void {
+        if (_editing) {
+            save();
+            return;
+        }
         if (_running) {
             reset();
         } else {
@@ -51,18 +73,37 @@ class RestTimerView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    // Swipe up/down: change the duration while idle, and persist it.
-    function adjust(delta as Number) as Void {
-        if (_running) {
-            return;
-        }
-        var next = clamp(_duration + delta);
-        if (next != _duration) {
-            _duration = next;
-            _remaining = next;
-            Application.Storage.setValue(STORAGE_KEY, next);
+    // Tap and hold: enter edit mode (only while stopped).
+    function beginEdit() as Void {
+        if (!_running && !_editing) {
+            _editing = true;
             WatchUi.requestUpdate();
         }
+    }
+
+    // Swipe up/down while editing: step the draft value by 5s.
+    function adjust(direction as Number) as Void {
+        if (!_editing) {
+            return;
+        }
+        var next = direction > 0
+            ? (_remaining / STEP_SECONDS + 1) * STEP_SECONDS
+            : ((_remaining - 1) / STEP_SECONDS) * STEP_SECONDS;
+        _remaining = clamp(next);
+        WatchUi.requestUpdate();
+    }
+
+    function save() as Void {
+        _duration = _remaining;
+        _editing = false;
+        Application.Storage.setValue(STORAGE_KEY, _duration);
+        WatchUi.requestUpdate();
+    }
+
+    function cancelEdit() as Void {
+        _remaining = _duration;
+        _editing = false;
+        WatchUi.requestUpdate();
     }
 
     // Counts down; buzzes when it hits 0, then resets on the next tick.

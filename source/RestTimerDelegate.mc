@@ -10,10 +10,32 @@ class RestTimerDelegate extends WatchUi.BehaviorDelegate {
         _view = view;
     }
 
-    // Handle the physical top-right (START/ENTER) button only, so screen taps do nothing.
+    // Top-right (START/ENTER) button.
     function onKey(evt as WatchUi.KeyEvent) as Boolean {
         if (evt.getKey() == WatchUi.KEY_ENTER) {
-            _view.toggle();
+            _view.pressButton();
+            return true;
+        }
+        return false;
+    }
+
+    function onHold(evt as WatchUi.ClickEvent) as Boolean {
+        _view.beginEdit();
+        return true;
+    }
+
+    // Taps only save while editing; always consumed so they never trigger onSelect.
+    function onTap(evt as WatchUi.ClickEvent) as Boolean {
+        if (_view.isEditing()) {
+            _view.save();
+        }
+        return true;
+    }
+
+    // Back while editing discards the change instead of exiting the app.
+    function onBack() as Boolean {
+        if (_view.isEditing()) {
+            _view.cancelEdit();
             return true;
         }
         return false;
