@@ -41,6 +41,22 @@ class RestTimerDelegate extends WatchUi.BehaviorDelegate {
         return false;
     }
 
+    // Button-only watches: hold UP (MENU) to edit, UP/DOWN to adjust.
+    function onMenu() as Boolean {
+        _view.beginEdit();
+        return true;
+    }
+
+    function onPreviousPage() as Boolean {
+        _view.adjust(1);
+        return true;
+    }
+
+    function onNextPage() as Boolean {
+        _view.adjust(-1);
+        return true;
+    }
+
     function onSwipe(evt as WatchUi.SwipeEvent) as Boolean {
         var dir = evt.getDirection();
         if (dir == WatchUi.SWIPE_UP) {

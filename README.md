@@ -1,6 +1,7 @@
 # simple-garmin-rest-timer
 
-A tiny Connect IQ rest timer for the Garmin vívoactive 4 / 4S.
+A tiny Connect IQ rest timer for Garmin watches (vívoactive, Venu, Forerunner, fēnix, epix,
+Instinct, MARQ, Descent, D2, Approach, Enduro — every watch on Connect IQ 3.0+).
 
 ## Usage
 
@@ -11,12 +12,14 @@ A tiny Connect IQ rest timer for the Garmin vívoactive 4 / 4S.
   - **Swipe up / down** to change it in 5 s steps (1–180).
   - **Tap** the screen or press the **top-right button** to save.
   - **Back** discards the change.
-- A small hint at the bottom shows "Tap and hold to edit" or "Tap to save".
+- Watches without a touchscreen: **hold UP** to edit, **UP / DOWN** to change, **START** to save.
+- A small hint at the bottom shows "Tap and hold to edit" or "Tap to save" (button hints on non-touch watches).
 - The saved time is restored the next time the app opens.
 
 ## Build & install
 
-1. Install the [Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/) and, in the SDK Manager, download the `vivoactive4` device.
+1. Install the [Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/) and, in the SDK Manager, download the devices you want
+   (e.g. `vivoactive4`).
 2. Create a developer key once:
    ```sh
    openssl genrsa -out developer_key.pem 4096

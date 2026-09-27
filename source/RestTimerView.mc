@@ -2,6 +2,7 @@ import Toybox.Application;
 import Toybox.Attention;
 import Toybox.Graphics;
 import Toybox.Lang;
+import Toybox.System;
 import Toybox.Timer;
 import Toybox.WatchUi;
 
@@ -10,6 +11,8 @@ const MAX_SECONDS = 180;
 const STEP_SECONDS = 5;
 const DEFAULT_SECONDS = 30;
 const STORAGE_KEY = "duration";
+// Light green: shows green on colour screens but maps to white (not black) on monochrome ones.
+const RUNNING_COLOR = 0x55FF55;
 
 class RestTimerView extends WatchUi.View {
 
@@ -19,9 +22,11 @@ class RestTimerView extends WatchUi.View {
     private var _running as Boolean = false;
     private var _editing as Boolean = false;
     private var _timer as Timer.Timer;
+    private var _touch as Boolean;
 
     function initialize() {
         View.initialize();
+        _touch = System.getDeviceSettings().isTouchScreen;
         var saved = Application.Storage.getValue(STORAGE_KEY);
         if (saved instanceof Number) {
             _duration = clamp(saved);
@@ -38,7 +43,7 @@ class RestTimerView extends WatchUi.View {
 
         var color = Graphics.COLOR_WHITE;
         if (_running) {
-            color = Graphics.COLOR_GREEN;
+            color = RUNNING_COLOR;
         } else if (_editing) {
             color = Graphics.COLOR_YELLOW;
         }
@@ -49,9 +54,16 @@ class RestTimerView extends WatchUi.View {
         if (!_running) {
             dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w / 2, h * 0.84, Graphics.FONT_XTINY,
-                _editing ? "Tap to save" : "Tap and hold to edit",
+                hintText(),
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
+    }
+
+    private function hintText() as String {
+        if (_touch) {
+            return _editing ? "Tap to save" : "Tap and hold to edit";
+        }
+        return _editing ? "START to save" : "Hold UP to edit";
     }
 
     function isEditing() as Boolean {
@@ -73,7 +85,7 @@ class RestTimerView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    // Tap and hold: enter edit mode (only while stopped).
+    // Tap and hold (or hold UP / MENU on button-only watches): enter edit mode (only while stopped).
     function beginEdit() as Void {
         if (!_running && !_editing) {
             _editing = true;
@@ -81,7 +93,7 @@ class RestTimerView extends WatchUi.View {
         }
     }
 
-    // Swipe up/down while editing: step the draft value by 5s.
+    // Swipe up/down (or UP/DOWN buttons) while editing: step the draft value by 5s.
     function adjust(direction as Number) as Void {
         if (!_editing) {
             return;
