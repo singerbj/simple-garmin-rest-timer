@@ -69,3 +69,7 @@ builds the app and shows it in Finder. Copy it into `GARMIN/APPS/` with
 [OpenMTP](https://openmtp.ganeshrvel.com), then unplug the watch.
 
 A build signed with your developer key runs on your own watch. You only need the Store to share the app with other people.
+
+## License
+
+[MIT](LICENSE)
