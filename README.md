@@ -9,6 +9,10 @@
   Instinct, MARQ, Descent, D2, Approach, Enduro — every watch on Connect IQ 3.0+).
 </p>
 
+<p align="center">
+  <a href="https://apps.garmin.com/apps/0f10ddf3-a161-44b1-ba24-15360298fdcf"><strong>Get it on the Connect IQ Store</strong></a>
+</p>
+
 <table align="center">
   <tr>
     <td align="center"><img src="assets/1.png" alt="Stopped" width="180"></td>
